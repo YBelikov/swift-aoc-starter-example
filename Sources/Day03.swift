@@ -19,9 +19,8 @@ struct Day03: AdventDay {
   func part2() -> Any {
     let allowCalcCommand = "do()"
     let disallowCalcCommand = "don't()"
-    var windowWidth = disallowCalcCommand.count
     var windowStartIndex = data.startIndex
-    var windowEndIndex = data.index(windowStartIndex, offsetBy: disallowCalcCommand.count - 1, limitedBy: data.endIndex) ?? data.endIndex
+    var windowEndIndex = data.indexShifted(from: windowStartIndex, offsetBy: disallowCalcCommand.count - 1)
     var lastUsedIndex = data.startIndex
     var searchingForDont = true
     var sum = 0
@@ -30,15 +29,13 @@ struct Day03: AdventDay {
         if String(data[windowStartIndex...windowEndIndex]) == disallowCalcCommand {
           searchingForDont = false
           sum += processString(String(data[lastUsedIndex...windowStartIndex]))
-          windowWidth = allowCalcCommand.count
-          windowEndIndex = data.indexShifted(from: windowStartIndex, offsetBy: windowWidth - 1)
+          windowEndIndex = data.indexShifted(from: windowStartIndex, offsetBy: allowCalcCommand.count - 1)
         }
       } else {
         if String(data[windowStartIndex...windowEndIndex]) == allowCalcCommand {
           searchingForDont = true
           lastUsedIndex =  data.indexShifted(from: windowEndIndex, offsetBy: 1)
-          windowWidth = disallowCalcCommand.count
-          windowEndIndex = data.indexShifted(from: windowStartIndex, offsetBy: windowWidth - 1)
+          windowEndIndex = data.indexShifted(from: windowStartIndex, offsetBy:  disallowCalcCommand.count - 1)
         }
       }
       windowStartIndex = data.index(after: windowStartIndex)
